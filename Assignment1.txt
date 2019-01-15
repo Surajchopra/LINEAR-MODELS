@@ -1,0 +1,127 @@
+﻿Data Analytics 
+SESSION 11: Linear Models 
+Assignment 1 
+ 
+1. Use the link given below and locate the bank marketing dataset. https://archive.ics.uci.edu/ml/machine-learning-databases/00222/ 
+Perform the below operations: 
+
+a. Create a visual for representing missing values in the dataset. 
+b. Show a distribution of clients based on a job.
+c. Check whether is there any relation between Job and Marital Status? 
+d. Check whether is there any association between Job and Education?
+
+
+Answer:
+
+library(readr) 
+bank_full <- read_delim("bank-full.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+
+or 
+we can also use below function to open the dataset in data frame structure
+
+bank_full <- read.csv(file.choose(), header = TRUE, sep = ";")
+bank_full
+
+a:Create a visual for representing missing values in the dataset. 
+
+if(length(which(is.na(bank_full$age)==TRUE)>0))
+{
+  print("Missing Value found in the specified column")
+}
+else
+  print("All okay: No Missing Value found in the specified column")
+
+Output:
+[1] "All okay: No Missing Value found in the specified column"
+
+head(bank_full)
+str(bank_full) 
+
+summary(bank_full) 				## Provides basic statistical information of each variable
+is.na(bank_full) 				## Displays True for a missing value
+
+missmap(bank_full,main="Missing Data - Bank ", col=c("red","grey"),legend=FALSE)
+
+b. Show a distribution of clients based on a job.
+
+Answer:
+
+barplot(table(bank_full$job),col="red",main="JOB")
+
+barplot(table(bank_full$marital),col="green",main="Marital")
+
+barplot(table(bank_full$education),col="red",main="Education")
+
+par(oma=c(2,0,0,0)) #so labels are not cut off
+barplot(table(bank_full$job),ylab = "Frequency", main = "bank_full$job", border="black", col="grey",las=2)
+
+#Histogram for job,marital and education - three categorical variables
+
+par(oma=c(2,0,0,0)) #so labels are not cut off
+barplot(table(bank_full$job),ylab = "Frequency", main = "bank_full$job", border="yellow", col="violet",las=2)
+
+par(oma=c(2,0,0,0)) #so labels are not cut off
+barplot(table(bank_full$marital),ylab = "Frequency", main = "bank_full$marital", border="green", col="yellow",las=2)
+
+par(oma=c(2,0,0,0)) #so labels are not cut off
+barplot(table(bank_full$education),ylab = "Frequency", main = "bank_full$education", border="red", col="blue",las=2)
+
+c. Check whether is there any relation between Job and Marital Status? 
+
+Answer:
+
+chisq.test <- with(bank_full, chisq.test( job, marital))
+
+OutPut:
+	Pearson's Chi-squared test
+
+data:  job and marital
+X-squared = 3837.6, df = 22, p-value < 2.2e-16
+with(bank_full, table( job, marital))
+
+Output:
+               marital
+job             divorced married single
+  admin.             750    2693   1728
+  blue-collar        750    6968   2014
+  entrepreneur       179    1070    238
+  housemaid          184     912    144
+  management        1111    5400   2947
+  retired            425    1731    108
+  self-employed      140     993    446
+  services           549    2407   1198
+  student              6      54    878
+  technician         925    4052   2620
+  unemployed         171     731    401
+  unknown             17     203     68
+
+d. Check whether is there any association between Job and Education?
+
+Answer:
+with(bank_full, chisq.test(job,education))
+
+Output:
+	Pearson's Chi-squared test
+
+data:  job and education
+X-squared = 28483, df = 33, p-value < 2.2e-16
+
+
+with(bank_full, table( job, education))
+
+Output:
+               education
+job             primary secondary tertiary unknown
+  admin.            209      4219      572     171
+  blue-collar      3758      5371      149     454
+  entrepreneur      183       542      686      76
+  housemaid         627       395      173      45
+  management        294      1121     7801     242
+  retired           795       984      366     119
+  self-employed     130       577      833      39
+  services          345      3457      202     150
+  student            44       508      223     163
+  technician        158      5229     1968     242
+  unemployed        257       728      289      29
+  unknown            51        71       39     127
+
